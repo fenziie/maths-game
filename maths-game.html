@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Math Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 36px;
+        margin-bottom: 30px;
+        color: #333;
+      }
+
+      #question {
+        font-size: 48px;
+        margin-bottom: 30px;
+        color: #333;
+      }
+
+      #answers {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+
+      button {
+        width: 150px;
+        height: 80px;
+        margin: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        background-color: #333;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      button:hover {
+        background-color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <h1>Math Game</h1>
+        <div id="question"></div>
+        <div id="answers"></div>
+      </div>
+    </div>
+
+    <audio id="correctAudio" src="audio/correct.mp3"></audio>
+    <audio id="incorrectAudio" src="audio/incorrect.mp3"></audio>
+
+    <script>
+      var questionElement = document.getElementById('question');
+      var answersElement = document.getElementById('answers');
+
+      function generateQuestion() {
+        var num1 = Math.floor(Math.random() * 10) + 1;
+        var num2 = Math.floor(Math.random() * 10) + 1;
+        var operator = Math.random() < 0.5 ? '+' : '-';
+        var answer = operator === '+' ? num1 + num2 : num1 - num2;
+
+        questionElement.textContent = num1 + ' ' + operator + ' ' + num2 + ' = ?';
+
+        var answerOptions = [answer];
+        while (answerOptions.length < 4) {
+          var option = Math.floor(Math.random() * 20) + 1;
+          if (answerOptions.indexOf(option) === -1) {
+            answerOptions.push(option);
+          }
+        }
+
+        answersElement.innerHTML = '';
+        answerOptions.sort(function() { return 0.5 - Math.random(); });
+
+        for (var i = 0; i < answerOptions.length; i++) {
+          var answerButton = document.createElement('button');
+          answerButton.textContent = answerOptions[i];
+          answerButton.onclick = function() {
+            if (this.textContent == answer) {
+              document.getElementById('correctAudio').play();
+            } else {
+              document.getElementById('incorrectAudio').play();
+            }
+            generateQuestion();
+          }
+          answersElement.appendChild(answerButton);
+        }
+      }
+
+      generateQuestion();
+    </script>
+  </body>
+</html>
